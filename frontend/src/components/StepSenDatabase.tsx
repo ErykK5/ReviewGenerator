@@ -4,13 +4,19 @@ import type { SenMeasure, Report } from '../types'
 
 export default function StepSenDatabase({
   reportId,
+  initialReport,
+  onBack,
   onReady,
 }: {
   reportId: number
+  initialReport?: Report
+  onBack: () => void
   onReady: (report: Report) => void
 }) {
   const [measures, setMeasures] = useState<SenMeasure[]>([])
-  const [selected, setSelected] = useState<Set<number>>(new Set())
+  const [selected, setSelected] = useState<Set<number>>(
+    () => new Set((initialReport?.selectedSenMeasures ?? []).map((m) => m.id))
+  )
 
   useEffect(() => {
     api.getSenMeasures().then(setMeasures)
@@ -51,7 +57,12 @@ export default function StepSenDatabase({
         </fieldset>
       ))}
 
-      <button onClick={saveAndContinue} style={{ marginTop: 8 }}>Next: summary</button>
+      <div className="step-actions">
+        <button type="button" className="btn-secondary" onClick={onBack}>
+          ← Back
+        </button>
+        <button onClick={saveAndContinue}>Next: summary</button>
+      </div>
     </div>
   )
 }

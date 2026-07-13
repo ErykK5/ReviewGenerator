@@ -2,13 +2,34 @@ import { useState } from 'react'
 import { api } from '../api/client'
 import type { Student } from '../types'
 
-export default function StepStudentData({ onSaved }: { onSaved: (s: Student) => void }) {
-  const [data, setData] = useState<Student>({ firstName: '', lastName: '', pesel: '' })
+function sameStudent(a: Student, b: Student) {
+  return (
+    a.firstName === b.firstName &&
+    a.lastName === b.lastName &&
+    a.pesel === b.pesel &&
+    (a.school ?? '') === (b.school ?? '') &&
+    (a.schoolClass ?? '') === (b.schoolClass ?? '') &&
+    (a.psychologist ?? '') === (b.psychologist ?? '')
+  )
+}
+
+export default function StepStudentData({
+  initialStudent,
+  onSaved,
+}: {
+  initialStudent?: Student
+  onSaved: (s: Student) => void
+}) {
+  const [data, setData] = useState<Student>(initialStudent ?? { firstName: '', lastName: '', pesel: '' })
   const [error, setError] = useState<string | null>(null)
 
   async function save() {
     try {
       setError(null)
+      if (initialStudent && sameStudent(initialStudent, data)) {
+        onSaved(initialStudent)
+        return
+      }
       const saved = await api.createStudent(data)
       onSaved(saved)
     } catch (e) {

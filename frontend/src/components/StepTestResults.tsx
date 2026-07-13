@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { api } from '../api/client'
 import type { Report, WiscIndex } from '../types'
 
@@ -11,19 +11,30 @@ const SUBTESTS = [
 
 export default function StepTestResults({
   studentId,
+  initialReport,
+  onBack,
   onReady,
 }: {
   studentId: number
+  initialReport?: Report
+  onBack: () => void
   onReady: (report: Report) => void
 }) {
-  const [reportId, setReportId] = useState<number | null>(null)
-  const [indexScores, setIndexScores] = useState<Record<string, number>>({})
-  const [subtestScores, setSubtestScores] = useState<Record<string, number>>({})
+  const [reportId, setReportId] = useState<number | null>(initialReport?.id ?? null)
+  const [indexScores, setIndexScores] = useState<Record<string, number>>(() =>
+    Object.fromEntries((initialReport?.indexResults ?? []).map((r) => [r.wiscIndex, r.score]))
+  )
+  const [subtestScores, setSubtestScores] = useState<Record<string, number>>(() =>
+    Object.fromEntries((initialReport?.subtestResults ?? []).map((r) => [r.subtest, r.score]))
+  )
   const [saving, setSaving] = useState(false)
+  const creatingRef = useRef(false)
 
   useEffect(() => {
+    if (reportId || creatingRef.current) return
+    creatingRef.current = true
     api.createReport(studentId).then((r) => setReportId(r.id!))
-  }, [studentId])
+  }, [studentId, reportId])
 
   async function saveAndContinue() {
     if (!reportId) return
@@ -50,6 +61,7 @@ export default function StepTestResults({
             {w}
             <input
               type="number"
+              defaultValue={indexScores[w] ?? ''}
               onChange={(e) => setIndexScores({ ...indexScores, [w]: Number(e.target.value) })}
             />
           </label>
@@ -63,15 +75,21 @@ export default function StepTestResults({
             {p}
             <input
               type="number"
+              defaultValue={subtestScores[p] ?? ''}
               onChange={(e) => setSubtestScores({ ...subtestScores, [p]: Number(e.target.value) })}
             />
           </label>
         ))}
       </div>
 
-      <button onClick={saveAndContinue} disabled={!reportId || saving} style={{ marginTop: 24 }}>
-        Next: SEN database
-      </button>
+      <div className="step-actions">
+        <button type="button" className="btn-secondary" onClick={onBack}>
+          ← Back
+        </button>
+        <button onClick={saveAndContinue} disabled={!reportId || saving}>
+          Next: SEN database
+        </button>
+      </div>
     </div>
   )
 }
