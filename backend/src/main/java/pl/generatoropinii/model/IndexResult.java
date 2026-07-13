@@ -1,5 +1,6 @@
 package pl.generatoropinii.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class IndexResult {
 
     @ManyToOne
     @JoinColumn(name = "report_id")
+    @JsonIgnore
     private Report report;
 
     @Enumerated(EnumType.STRING)
