@@ -13,47 +13,57 @@ export default function App() {
   const [report, setReport] = useState<Report | null>(null)
 
   return (
-    <div style={{ maxWidth: 720, margin: '0 auto', padding: 24, fontFamily: 'sans-serif' }}>
-      <h1>Psychological-pedagogical report generator</h1>
+    <div className="app-shell">
+      <header className="app-header">
+        <h1>Psychological-pedagogical report generator</h1>
+        <p>Walk through the steps below to build a complete report</p>
+      </header>
 
-      <ol style={{ display: 'flex', gap: 16, listStyle: 'none', padding: 0 }}>
-        {(['Student data', 'Test results', 'SEN database', 'Summary'] as const).map((label, i) => (
-          <li key={label} style={{ fontWeight: step === i + 1 ? 'bold' : 'normal' }}>
-            {i + 1}. {label}
-          </li>
-        ))}
+      <ol className="stepper">
+        {(['Student data', 'Test results', 'SEN database', 'Summary'] as const).map((label, i) => {
+          const n = i + 1
+          const state = n === step ? 'active' : n < step ? 'done' : ''
+          return (
+            <li key={label} className={state}>
+              <span className="step-badge">{n < step ? '✓' : n}</span>
+              {label}
+            </li>
+          )
+        })}
       </ol>
 
-      {step === 1 && (
-        <StepStudentData
-          onSaved={(s) => {
-            setStudent(s)
-            setStep(2)
-          }}
-        />
-      )}
+      <div className="card">
+        {step === 1 && (
+          <StepStudentData
+            onSaved={(s) => {
+              setStudent(s)
+              setStep(2)
+            }}
+          />
+        )}
 
-      {step === 2 && student?.id && (
-        <StepTestResults
-          studentId={student.id}
-          onReady={(r) => {
-            setReport(r)
-            setStep(3)
-          }}
-        />
-      )}
+        {step === 2 && student?.id && (
+          <StepTestResults
+            studentId={student.id}
+            onReady={(r) => {
+              setReport(r)
+              setStep(3)
+            }}
+          />
+        )}
 
-      {step === 3 && report?.id && (
-        <StepSenDatabase
-          reportId={report.id}
-          onReady={(r) => {
-            setReport(r)
-            setStep(4)
-          }}
-        />
-      )}
+        {step === 3 && report?.id && (
+          <StepSenDatabase
+            reportId={report.id}
+            onReady={(r) => {
+              setReport(r)
+              setStep(4)
+            }}
+          />
+        )}
 
-      {step === 4 && report?.id && <StepSummary reportId={report.id} />}
+        {step === 4 && report?.id && <StepSummary reportId={report.id} />}
+      </div>
     </div>
   )
 }

@@ -43,7 +43,7 @@ export default function StepSenDatabase({
         <fieldset key={category} style={{ marginBottom: 12 }}>
           <legend>{category}</legend>
           {items.map((m) => (
-            <label key={m.id} style={{ display: 'block' }}>
+            <label key={m.id} style={{ display: 'flex' }}>
               <input type="checkbox" checked={selected.has(m.id)} onChange={() => toggle(m.id)} />
               {m.name}
             </label>
@@ -51,7 +51,7 @@ export default function StepSenDatabase({
         </fieldset>
       ))}
 
-      <button onClick={saveAndContinue}>Next: summary</button>
+      <button onClick={saveAndContinue} style={{ marginTop: 8 }}>Next: summary</button>
     </div>
   )
 }
