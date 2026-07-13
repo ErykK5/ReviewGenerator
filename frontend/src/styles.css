@@ -274,6 +274,27 @@ button:disabled {
   box-shadow: none;
 }
 
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--blue-600);
+  border: 1.5px solid var(--blue-300);
+  box-shadow: none;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--blue-50);
+  filter: none;
+  box-shadow: none;
+}
+
 .error-text {
   color: #c0392b;
   background: #fdeeec;

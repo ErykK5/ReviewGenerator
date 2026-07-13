@@ -12,6 +12,10 @@ export default function App() {
   const [student, setStudent] = useState<Student | null>(null)
   const [report, setReport] = useState<Report | null>(null)
 
+  function goBack() {
+    setStep((s) => (s > 1 ? ((s - 1) as Step) : s))
+  }
+
   return (
     <div className="app-shell">
       <header className="app-header">
@@ -35,6 +39,7 @@ export default function App() {
       <div className="card">
         {step === 1 && (
           <StepStudentData
+            initialStudent={student ?? undefined}
             onSaved={(s) => {
               setStudent(s)
               setStep(2)
@@ -45,6 +50,8 @@ export default function App() {
         {step === 2 && student?.id && (
           <StepTestResults
             studentId={student.id}
+            initialReport={report ?? undefined}
+            onBack={goBack}
             onReady={(r) => {
               setReport(r)
               setStep(3)
@@ -55,6 +62,8 @@ export default function App() {
         {step === 3 && report?.id && (
           <StepSenDatabase
             reportId={report.id}
+            initialReport={report}
+            onBack={goBack}
             onReady={(r) => {
               setReport(r)
               setStep(4)
@@ -62,7 +71,14 @@ export default function App() {
           />
         )}
 
-        {step === 4 && report?.id && <StepSummary reportId={report.id} />}
+        {step === 4 && report?.id && (
+          <StepSummary
+            reportId={report.id}
+            initialReport={report}
+            onBack={goBack}
+            onReportChange={setReport}
+          />
+        )}
       </div>
     </div>
   )

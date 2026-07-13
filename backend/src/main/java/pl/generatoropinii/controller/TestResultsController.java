@@ -38,6 +38,7 @@ public class TestResultsController {
     @PostMapping("/{reportId}/indexes")
     public Report addIndexResult(@PathVariable Long reportId, @RequestBody IndexResult result) {
         Report report = reportRepository.findById(reportId).orElseThrow();
+        report.getIndexResults().removeIf(existing -> existing.getWiscIndex() == result.getWiscIndex());
         result.setReport(report);
         report.getIndexResults().add(result);
         return reportRepository.save(report);
@@ -46,6 +47,7 @@ public class TestResultsController {
     @PostMapping("/{reportId}/subtests")
     public Report addSubtestResult(@PathVariable Long reportId, @RequestBody SubtestResult result) {
         Report report = reportRepository.findById(reportId).orElseThrow();
+        report.getSubtestResults().removeIf(existing -> existing.getSubtest().equals(result.getSubtest()));
         result.setReport(report);
         report.getSubtestResults().add(result);
         return reportRepository.save(report);
