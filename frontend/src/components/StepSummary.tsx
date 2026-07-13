@@ -19,7 +19,7 @@ export default function StepSummary({ reportId }: { reportId: number }) {
     setSaved(true)
   }
 
-  if (!report) return <p>Generating report...</p>
+  if (!report) return <p className="status-text">Generating report...</p>
 
   return (
     <div>
@@ -33,7 +33,7 @@ export default function StepSummary({ reportId }: { reportId: number }) {
         onChange={(e) => setReport({ ...report, textForSchool: e.target.value })}
       />
 
-      <h3>Recommendations for the parent</h3>
+      <h3 style={{ marginTop: 20 }}>Recommendations for the parent</h3>
       <textarea
         rows={10}
         style={{ width: '100%' }}
@@ -41,8 +41,12 @@ export default function StepSummary({ reportId }: { reportId: number }) {
         onChange={(e) => setReport({ ...report, textForParent: e.target.value })}
       />
 
-      <button onClick={saveEdits}>Save edits</button>
-      {saved && <p>Saved. Export to .docx - to be wired up (see DocxExportService on the backend).</p>}
+      <button onClick={saveEdits} style={{ marginTop: 16 }}>Save edits</button>
+      {saved && (
+        <p className="success-text" style={{ marginTop: 12 }}>
+          Saved. Export to .docx - to be wired up (see DocxExportService on the backend).
+        </p>
+      )}
     </div>
   )
 }

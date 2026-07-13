@@ -44,7 +44,7 @@ export default function StepTestResults({
   return (
     <div>
       <h2>Main index scores</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, maxWidth: 480 }}>
+      <div className="field-grid cols-3">
         {INDEXES.map((w) => (
           <label key={w}>
             {w}
@@ -56,8 +56,8 @@ export default function StepTestResults({
         ))}
       </div>
 
-      <h2>Subtest scores</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, maxWidth: 480 }}>
+      <h2 style={{ marginTop: 24 }}>Subtest scores</h2>
+      <div className="field-grid cols-2">
         {SUBTESTS.map((p) => (
           <label key={p}>
             {p}
@@ -69,7 +69,7 @@ export default function StepTestResults({
         ))}
       </div>
 
-      <button onClick={saveAndContinue} disabled={!reportId || saving} style={{ marginTop: 16 }}>
+      <button onClick={saveAndContinue} disabled={!reportId || saving} style={{ marginTop: 24 }}>
         Next: SEN database
       </button>
     </div>

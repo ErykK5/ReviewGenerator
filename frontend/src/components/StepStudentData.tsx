@@ -17,7 +17,7 @@ export default function StepStudentData({ onSaved }: { onSaved: (s: Student) => 
   }
 
   return (
-    <div style={{ display: 'grid', gap: 12, maxWidth: 400 }}>
+    <div className="field-grid cols-2">
       <label>
         First name
         <input value={data.firstName} onChange={(e) => setData({ ...data, firstName: e.target.value })} />
@@ -43,9 +43,13 @@ export default function StepStudentData({ onSaved }: { onSaved: (s: Student) => 
         <input value={data.psychologist ?? ''} onChange={(e) => setData({ ...data, psychologist: e.target.value })} />
       </label>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error-text" style={{ gridColumn: '1 / -1' }}>{error}</p>}
 
-      <button onClick={save} disabled={!data.firstName || !data.lastName || !data.pesel}>
+      <button
+        onClick={save}
+        disabled={!data.firstName || !data.lastName || !data.pesel}
+        style={{ gridColumn: '1 / -1', justifySelf: 'start' }}
+      >
         Next: test results
       </button>
     </div>
